@@ -200,3 +200,45 @@ evaluate_model(X_train_pca, X_test_pca, y_train, y_test, model_name="PCA (Dimens
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
+
+
+
+# EXP 5 DBSCAN
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_blobs
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+
+centers = [[1, 1], [-1, -1], [1, -1]] 
+cluster_std = [0.4, 0.3, 0.2] 
+
+X, y = make_blobs(n_samples=750, centers=centers, cluster_std=cluster_std, random_state=42)
+X = StandardScaler().fit_transform(X)
+
+dbscan = DBSCAN(eps=0.3, min_samples=10) 
+dbscan.fit(X)
+
+labels = dbscan.labels_
+
+unique_labels = set(labels)
+colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+
+for k, col in zip(unique_labels, colors):
+    if k == -1:
+        col = 'k'
+    class_member_mask = (labels == k)
+    xy = X[class_member_mask]
+    plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=6)
+
+plt.title("DBSCAN Clustering with Noise")
+plt.show()
+
+n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+n_noise = list(labels).count(-1)
+
+print(f"Estimated number of clusters: {n_clusters}")
+print(f"Estimated number of noise points: {n_noise}")
+
+
