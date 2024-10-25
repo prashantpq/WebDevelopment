@@ -242,3 +242,44 @@ print(f"Estimated number of clusters: {n_clusters}")
 print(f"Estimated number of noise points: {n_noise}")
 
 
+
+
+# EXP 6 K-means Clustering
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+X, y = make_blobs(n_samples=500, centers=5, cluster_std=1.0, random_state=42)
+X = StandardScaler().fit_transform(X)
+
+wcss = [] 
+K_values = range(1, 11) 
+
+for k in K_values:
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(X)
+    wcss.append(kmeans.inertia_)  
+
+plt.figure(figsize=(8, 5))
+plt.plot(K_values, wcss, 'bo-', markersize=8)
+plt.title('Elbow Method for Optimal K')
+plt.xlabel('Number of clusters (K)')
+plt.ylabel('WCSS (Inertia)')
+plt.show()
+
+optimal_k = 5  
+
+kmeans_optimal = KMeans(n_clusters=optimal_k, random_state=42)
+y_kmeans = kmeans_optimal.fit_predict(X)
+
+plt.figure(figsize=(8, 5))
+plt.scatter(X[:, 0], X[:, 1], c=y_kmeans, cmap='viridis', s=50)
+plt.scatter(kmeans_optimal.cluster_centers_[:, 0], kmeans_optimal.cluster_centers_[:, 1], s=300, c='red', marker='X', label='Centroids')
+plt.title(f'K-Means Clustering with K={optimal_k}')
+plt.legend()
+plt.show()
+
+
