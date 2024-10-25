@@ -283,3 +283,51 @@ plt.legend()
 plt.show()
 
 
+
+
+# EXP 8 Decision Tree
+
+import numpy as np
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+data = load_iris()
+X = pd.DataFrame(data['data'], columns=data['feature_names'])
+y = pd.Series(data['target'])
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+tree_full = DecisionTreeClassifier(random_state=42)
+tree_full.fit(X_train, y_train)
+
+y_pred_full = tree_full.predict(X_test)
+accuracy_full = accuracy_score(y_test, y_pred_full)
+print(f"Accuracy with all features: {accuracy_full * 100:.2f}%")
+
+X_train_subset1 = X_train.iloc[:, :2]
+X_test_subset1 = X_test.iloc[:, :2]
+
+tree_subset1 = DecisionTreeClassifier(random_state=42)
+tree_subset1.fit(X_train_subset1, y_train)
+
+y_pred_subset1 = tree_subset1.predict(X_test_subset1)
+accuracy_subset1 = accuracy_score(y_test, y_pred_subset1)
+print(f"Accuracy with first two features: {accuracy_subset1 * 100:.2f}%")
+
+X_train_subset2 = X_train.iloc[:, 2:]
+X_test_subset2 = X_test.iloc[:, 2:]
+
+tree_subset2 = DecisionTreeClassifier(random_state=42)
+tree_subset2.fit(X_train_subset2, y_train)
+
+y_pred_subset2 = tree_subset2.predict(X_test_subset2)
+accuracy_subset2 = accuracy_score(y_test, y_pred_subset2)
+print(f"Accuracy with last two features: {accuracy_subset2 * 100:.2f}%")
+
+print("\nSummary of Accuracy Scores:")
+print(f"Full feature set: {accuracy_full * 100:.2f}%")
+print(f"First two features: {accuracy_subset1 * 100:.2f}%")
+print(f"Last two features: {accuracy_subset2 * 100:.2f}%")
