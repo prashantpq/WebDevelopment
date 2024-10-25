@@ -65,6 +65,7 @@ print(f"Number of rows after removing duplicates: {len(df_cleaned)}")
 
 
 
+
 # EXP 2 Linear Regression
 
 import numpy as np
@@ -107,6 +108,7 @@ plt.show()
 
 
 
+
 # EXP 3 Naive Bayes
 
 import pandas as pd
@@ -143,6 +145,7 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 
 print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, y_pred))
+
 
 
 
@@ -203,6 +206,7 @@ print(classification_report(y_test, y_pred))
 
 
 
+
 # EXP 5 DBSCAN
 
 import numpy as np
@@ -244,6 +248,7 @@ print(f"Estimated number of noise points: {n_noise}")
 
 
 
+
 # EXP 6 K-means Clustering
 
 import numpy as np
@@ -281,6 +286,7 @@ plt.scatter(kmeans_optimal.cluster_centers_[:, 0], kmeans_optimal.cluster_center
 plt.title(f'K-Means Clustering with K={optimal_k}')
 plt.legend()
 plt.show()
+
 
 
 
