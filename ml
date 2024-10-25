@@ -65,7 +65,6 @@ print(f"Number of rows after removing duplicates: {len(df_cleaned)}")
 
 
 
-
 # EXP 2 Linear Regression
 
 import numpy as np
@@ -144,6 +143,59 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 
 print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, y_pred))
+
+
+
+
+# EXP 4 Feature Engineering
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.decomposition import PCA
+from sklearn.feature_selection import SelectKBest, chi2
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+import seaborn as sns
+df = sns.load_dataset('titanic')
+
+df = df[['pclass', 'sex', 'age', 'fare', 'embarked', 'survived']]
+df.dropna(inplace=True)
+
+df = pd.get_dummies(df, columns=['sex', 'embarked'], drop_first=True)
+
+X = df.drop('survived', axis=1)
+y = df['survived']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+def evaluate_model(X_train, X_test, y_train, y_test, model_name="Default"):
+    model = LogisticRegression(max_iter=200)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"\nModel: {model_name}")
+    print(f"Accuracy: {accuracy * 100:.2f}%")
+    print(classification_report(y_test, y_pred))
+
+evaluate_model(X_train, X_test, y_train, y_test, model_name="No Feature Engineering")
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+evaluate_model(X_train_scaled, X_test_scaled, y_train, y_test, model_name="Scaled Features")
+
+select_kbest = SelectKBest(chi2, k=4)
+X_train_selected = select_kbest.fit_transform(X_train, y_train)
+X_test_selected = select_kbest.transform(X_test)
+evaluate_model(X_train_selected, X_test_selected, y_train, y_test, model_name="Feature Selection (KBest)")
+
+pca = PCA(n_components=3)
+X_train_pca = pca.fit_transform(X_train)
+X_test_pca = pca.transform(X_test)
+evaluate_model(X_train_pca, X_test_pca, y_train, y_test, model_name="PCA (Dimensionality Reduction)")
+
 
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
